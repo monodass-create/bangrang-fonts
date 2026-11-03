@@ -1,4 +1,4 @@
-"""방랑 UI / 방랑 기록체 0.2 — 외부 글꼴 윤곽을 읽지 않는 자체 글자 생성 원본.
+"""방랑 UI / 방랑 기록체 0.3 — 외부 글꼴 윤곽을 읽지 않는 자체 글자 생성 원본.
 
 한글 자모와 영문·숫자의 기본 선을 이 파일에서 직접 정의한다.
 원형·선·끝 장식으로 윤곽을 만들고, 초성/중성/종성 배치에 따라 완성형을 구성한다.
@@ -73,6 +73,8 @@ def jamo(ink,char,box):
     # 압축된 초성·받침은 큰 자모의 획 굵기를 그대로 적용하지 않는다.
     weight=ink.weight*(.88 if h<400 else 1.0)
     if w<380:weight*=.96
+    # 작은 UI의 세 줄 구조가 닫히지 않도록 획 두께를 제한한다. 기록체 윤곽은 유지한다.
+    if not ink.display and h<400 and char in 'ㅎㄹㅂㅌ':weight=min(weight,60)
     def line(*p):ink.line([(x+a*w,y+b*h) for a,b in p],weight)
     def oval(a,b,rx,ry):ink.oval(x+a*w,y+b*h,rx*w,ry*h,weight)
     if char in PAIRS:
@@ -105,7 +107,7 @@ def jamo(ink,char,box):
         right=char in 'ㅏㅐㅑㅒ';extra=char in 'ㅐㅒㅔㅖ';double=char in 'ㅑㅒㅕㅖ'
         stem=(.24 if right else .49) if extra else (.3 if right else .7)
         line((stem,.08),(stem,.92))
-        for yy in ([.35,.65] if double else [.5]):
+        for yy in (([.35,.65] if ink.display else [.27,.73]) if double else [.5]):
             line((stem,yy),((.56 if extra else .9) if right else .08,yy))
         if extra:line((.88,.08),(.88,.92))
     elif char in ('ㅗ','ㅛ','ㅜ','ㅠ','ㅡ'):
@@ -120,13 +122,16 @@ def syllable(ink,cp):
     n=cp-0xac00;l=LEADS[n//588];v=VOWELS[n//28%21];t=TAILS[n%28]
     # 받침이 있을 때 윗부분을 줄이되, 글자 전체의 폭과 기준선은 고정한다.
     top=70;area=500 if t else 880
+    # 압축 ㅎ의 세 요소를 벌리면서 아래 ㅗ/ㅘ의 세로 획과는 다시 닿지 않도록 배치한다.
+    compact_h=t and l=='ㅎ' and not ink.display
+    lead_top=50 if compact_h else top
     if v in MIXED:
         a,b=MIXED[v]
-        jamo(ink,l,(80,top,470,310 if t else 490))
+        jamo(ink,l,(80,lead_top,470,(330 if compact_h else 310) if t else 490))
         jamo(ink,a,(60,465 if t else 675,525,130 if t else 230))
         jamo(ink,b,(650,top,275,area))
     elif v in 'ㅗㅛㅜㅠㅡ':
-        jamo(ink,l,(135,top,730,310 if t else 490))
+        jamo(ink,l,(135,lead_top,730,(330 if compact_h else 310) if t else 490))
         jamo(ink,v,(60,465 if t else 675,880,130 if t else 230))
     else:
         jamo(ink,l,(70,top+area*.06,475,area*.9));jamo(ink,v,(610,top,320,area))
@@ -352,20 +357,20 @@ def build(display):
     fb=FontBuilder(1000,isTTF=True);fb.setupGlyphOrder(order);fb.setupCharacterMap(cmap)
     fb.setupGlyf(glyphs);fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=900,descent=-250,lineGap=50)
-    fb.setupNameTable({'familyName':family,'styleName':'Regular','uniqueFontIdentifier':family+' 0.2.0',
-        'fullName':family+' Regular','psName':family.replace(' ','')+'-Regular','version':'Version 0.200',
+    fb.setupNameTable({'familyName':family,'styleName':'Regular','uniqueFontIdentifier':family+' 0.3.0',
+        'fullName':family+' Regular','psName':family.replace(' ','')+'-Regular','version':'Version 0.300',
         'copyright':'Copyright 2026 The Bangrang Font Project Authors.',
         'licenseDescription':'Licensed under the SIL Open Font License, Version 1.1. No Reserved Font Names.',
         'licenseInfoURL':'https://openfontlicense.org'})
     fb.setupOS2(version=4,sTypoAscender=900,sTypoDescender=-250,sTypoLineGap=50,usWinAscent=900,usWinDescent=250,
                 usWeightClass=400,fsType=0,fsSelection=0xc0,sxHeight=480,sCapHeight=690)
     fb.setupPost();fb.setupMaxp()
-    fb.font['head'].fontRevision=.2
+    fb.font['head'].fontRevision=.3
     fb.font['head'].lowestRecPPEM=18 if display else 13
-    fb.font['name'].setName(family+' 0.2.0',3,3,1,0x409)
+    fb.font['name'].setName(family+' 0.3.0',3,3,1,0x409)
     fb.font['name'].setName(family,16,3,1,0x409)
     fb.font['name'].setName('Regular',17,3,1,0x409)
-    # 일반 프로그램에서 영문 글자쌍 간격을 보정한다. 게임의 아틀라스는 별도 폭을 사용한다.
+    # GPOS를 읽는 프로그램과 현재 게임 렌더러가 영문 글자쌍 간격을 보정할 수 있게 한다.
     pairs={'AV':-45,'AW':-35,'AT':-25,'AY':-40,'VA':-45,'WA':-35,'TA':-25,'YA':-40,
            'To':-35,'Ta':-35,'Te':-35,'Yo':-35,'Ya':-35,'Wo':-20,'Vo':-25,'LT':-20}
     rules='\n'.join(f'pos uni{ord(a):04X} uni{ord(b):04X} {value};' for (a,b),value in pairs.items())
@@ -383,7 +388,7 @@ def build(display):
     return {'family':family,'korean_name':korean,'file':path.name,'glyph_count':len(order),
             'hangul_syllables':11172,'ascii_printable':95,'unicode_codepoints':len(cmap2),
             'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
-            'status':'0.2 revised; see validation and usage size limits','bounds_check':'passed'}
+            'status':'0.3 revised; see validation and usage size limits','bounds_check':'passed'}
 
 if __name__=='__main__':
     results=[build(False),build(True)]

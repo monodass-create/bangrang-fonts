@@ -37,8 +37,8 @@ for path in sorted((ROOT/'fonts').glob('*.ttf')):
         assert len({outline(ch) for ch in group})==len(group),group
     assert metrics[cmap[ord('-')]][0]<metrics[cmap[ord('–')]][0]<metrics[cmap[ord('—')]][0]
     assert 'GPOS' in f
-    assert abs(f['head'].fontRevision-.2)<.00001
-    assert f['name'].getDebugName(5)=='Version 0.200'
+    assert abs(f['head'].fontRevision-.3)<.00001
+    assert f['name'].getDebugName(5)=='Version 0.300'
     bounds=[]
     for name in f.getGlyphOrder():
         g=glyf[name]

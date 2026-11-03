@@ -1,7 +1,7 @@
 [
   {
     "font": "BangrangChronicle-Regular.ttf",
-    "sha256": "77e7e270b455f8710e9fceaab465c6bca5e2e7bdd716c5da9530c744ed432778",
+    "sha256": "a3c352987233d57d309bc05cb92c8e97677492646ac5b247b704dce1bc5cb591",
     "status": "passed",
     "checks": [
       "all modern Hangul nonempty and distinct",
@@ -24,7 +24,7 @@
   },
   {
     "font": "BangrangUI-Regular.ttf",
-    "sha256": "362a54166894920610f79f096d983f0bfb5facaa6ae5c7140839259abf7af31a",
+    "sha256": "e36ac9133492aef02d338f3954beec827612b1810a334f04629210cf73ed8190",
     "status": "passed",
     "checks": [
       "all modern Hangul nonempty and distinct",
