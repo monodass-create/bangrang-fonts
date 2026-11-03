@@ -45,7 +45,7 @@ report = {
     'renderer': {'Pillow': __version__, 'FreeType': features.version_module('freetype2')},
     'fonts': [],
 }
-for name, sizes in ([] if '--render-only' in sys.argv else [('BangrangUI-Regular.ttf', (11, 13, 15, 18, 24)),
+for name, sizes in ([] if '--render-only' in sys.argv else [('BangrangUI-Regular.ttf', (11, 12, 13, 14, 15, 16, 18, 24)),
                     ('BangrangChronicle-Regular.ttf', (18, 24, 32))]):
     path = FONTS / name
     entry = {'font': name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'rasters': []}
@@ -57,3 +57,9 @@ for name, sizes in ([] if '--render-only' in sys.argv else [('BangrangUI-Regular
     report['fonts'].append(entry)
 if report['fonts']:
     (OUT / 'small-size-validation.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    # 회색조까지 완전히 같은 글자와 빈 글자는 출시 검사를 실패시킨다.
+    # 임계값 비교는 안티앨리어싱 차이를 버리므로 후보 기록만 남긴다.
+    for font in report['fonts']:
+        for result in font['rasters']:
+            assert not result['empty_rasters'],(font['font'],result['size_px'],'empty')
+            assert not result['identical_grayscale_groups'],(font['font'],result['size_px'],'identical grayscale')

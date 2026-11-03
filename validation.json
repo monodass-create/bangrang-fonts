@@ -5,10 +5,10 @@
     "ascii_printable_present": 95,
     "duplicate_hangul_outlines": 0,
     "hangul_bounds": [
-      59,
-      -140,
-      934,
-      840
+      49,
+      -67,
+      888,
+      891
     ],
     "raster_sizes_checked": [
       11,
@@ -18,7 +18,7 @@
       24,
       48
     ],
-    "sha256": "e36ac9133492aef02d338f3954beec827612b1810a334f04629210cf73ed8190",
+    "sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
     "human_review": "representative images only; not all syllables or all applications"
   },
   {
@@ -40,7 +40,7 @@
       24,
       48
     ],
-    "sha256": "a3c352987233d57d309bc05cb92c8e97677492646ac5b247b704dce1bc5cb591",
+    "sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
     "human_review": "representative images only; not all syllables or all applications"
   }
 ]

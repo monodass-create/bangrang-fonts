@@ -1,0 +1,26 @@
+{
+  "browser": "Opera",
+  "device_pixel_ratio": 1,
+  "fonts_loaded": [
+    "BangrangUI",
+    "BangrangChronicle"
+  ],
+  "ui_sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
+  "chronicle_sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
+  "nfc_nfd_sample_canvas_pixels_equal": true,
+  "search_observations": [
+    {
+      "query": "목재",
+      "visible_rows": 1
+    },
+    {
+      "query": "Wood",
+      "visible_rows": 1
+    },
+    {
+      "query": "",
+      "visible_rows": 4
+    }
+  ],
+  "scope": "Observed local fixture, representative text and search controls; not all applications or all glyphs"
+}

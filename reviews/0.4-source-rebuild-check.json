@@ -1,0 +1,13 @@
+{
+  "rebuild": [
+    {
+      "font": "BangrangUI-Regular.ttf",
+      "tables_identical_except_build_time_and_checksum": true
+    },
+    {
+      "font": "BangrangChronicle-Regular.ttf",
+      "tables_identical_except_build_time_and_checksum": true
+    }
+  ],
+  "chronicle_v03_outline_metrics_cmap_kerning_preserved": true
+}

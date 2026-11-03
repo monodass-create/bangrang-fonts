@@ -1,0 +1,46 @@
+[
+  {
+    "font": "BangrangUI-Regular.ttf",
+    "hangul_present_nonempty_distinct": 11172,
+    "ascii_printable_present": 95,
+    "duplicate_hangul_outlines": 0,
+    "hangul_bounds": [
+      59,
+      -140,
+      934,
+      840
+    ],
+    "raster_sizes_checked": [
+      11,
+      13,
+      15,
+      18,
+      24,
+      48
+    ],
+    "sha256": "e36ac9133492aef02d338f3954beec827612b1810a334f04629210cf73ed8190",
+    "human_review": "representative images only; not all syllables or all applications"
+  },
+  {
+    "font": "BangrangChronicle-Regular.ttf",
+    "hangul_present_nonempty_distinct": 11172,
+    "ascii_printable_present": 95,
+    "duplicate_hangul_outlines": 0,
+    "hangul_bounds": [
+      35,
+      -132,
+      874,
+      815
+    ],
+    "raster_sizes_checked": [
+      11,
+      13,
+      15,
+      18,
+      24,
+      48
+    ],
+    "sha256": "a3c352987233d57d309bc05cb92c8e97677492646ac5b247b704dce1bc5cb591",
+    "human_review": "representative images only; not all syllables or all applications"
+  }
+]

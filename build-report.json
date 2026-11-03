@@ -1,26 +1,16 @@
 [
   {
-    "family": "Bangrang UI",
-    "korean_name": "방랑 UI체",
-    "file": "BangrangUI-Regular.ttf",
+    "file": "BangrangChronicle-Regular.ttf",
+    "sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
     "glyph_count": 11410,
-    "hangul_syllables": 11172,
-    "ascii_printable": 95,
-    "unicode_codepoints": 11409,
-    "sha256": "e36ac9133492aef02d338f3954beec827612b1810a334f04629210cf73ed8190",
-    "status": "0.3 revised; see validation and usage size limits",
-    "bounds_check": "passed"
+    "codepoints": 11409,
+    "version": "Version 0.400"
   },
   {
-    "family": "Bangrang Chronicle",
-    "korean_name": "방랑 기록체",
-    "file": "BangrangChronicle-Regular.ttf",
+    "file": "BangrangUI-Regular.ttf",
+    "sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
     "glyph_count": 11410,
-    "hangul_syllables": 11172,
-    "ascii_printable": 95,
-    "unicode_codepoints": 11409,
-    "sha256": "a3c352987233d57d309bc05cb92c8e97677492646ac5b247b704dce1bc5cb591",
-    "status": "0.3 revised; see validation and usage size limits",
-    "bounds_check": "passed"
+    "codepoints": 11409,
+    "version": "Version 0.400"
   }
 ]
