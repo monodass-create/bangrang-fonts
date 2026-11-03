@@ -1,0 +1,48 @@
+[
+  {
+    "font": "BangrangChronicle-Regular.ttf",
+    "sha256": "77e7e270b455f8710e9fceaab465c6bca5e2e7bdd716c5da9530c744ed432778",
+    "status": "passed",
+    "checks": [
+      "all modern Hangul nonempty and distinct",
+      "ASCII and selected symbols",
+      "proportional Latin and tabular digits",
+      "distinct punctuation",
+      "version consistency",
+      "whole file and table checksums",
+      "outline bounds",
+      "rendered stroke separation"
+    ],
+    "rendered_connected_components_200px": {
+      "흙": 6,
+      "홋": 5,
+      "획": 6,
+      "않": 6,
+      "좋": 5
+    },
+    "limits": "Not all-glyph human readability, cross-platform installation or usability certification"
+  },
+  {
+    "font": "BangrangUI-Regular.ttf",
+    "sha256": "362a54166894920610f79f096d983f0bfb5facaa6ae5c7140839259abf7af31a",
+    "status": "passed",
+    "checks": [
+      "all modern Hangul nonempty and distinct",
+      "ASCII and selected symbols",
+      "proportional Latin and tabular digits",
+      "distinct punctuation",
+      "version consistency",
+      "whole file and table checksums",
+      "outline bounds",
+      "rendered stroke separation"
+    ],
+    "rendered_connected_components_200px": {
+      "흙": 6,
+      "홋": 5,
+      "획": 6,
+      "않": 6,
+      "좋": 5
+    },
+    "limits": "Not all-glyph human readability, cross-platform installation or usability certification"
+  }
+]

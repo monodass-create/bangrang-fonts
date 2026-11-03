@@ -59,5 +59,5 @@ for i,p in enumerate(files):
             cp=0xac00+lead*588+vowel*28+(0 if lead%3==0 else 8 if lead%3==1 else 27)
             d.text((30+vowel*57,20+lead*73),chr(cp),font=f,fill=(26,35,34))
     im.save(OUT/('UI체-조합검수.png' if i==0 else '기록체-조합검수.png'))
-(ROOT/'validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+(ROOT/'validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print(json.dumps(report,ensure_ascii=True,indent=2))

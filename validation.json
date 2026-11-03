@@ -5,10 +5,10 @@
     "ascii_printable_present": 95,
     "duplicate_hangul_outlines": 0,
     "hangul_bounds": [
-      67,
+      59,
       -143,
-      927,
-      730
+      934,
+      828
     ],
     "raster_sizes_checked": [
       11,
@@ -18,7 +18,7 @@
       24,
       48
     ],
-    "sha256": "38b63595bc10da6faca48037a6aa17d00baa4476f0adc0e120d65f52d9c8e665",
+    "sha256": "362a54166894920610f79f096d983f0bfb5facaa6ae5c7140839259abf7af31a",
     "human_review": "representative images only; not all syllables or all applications"
   },
   {
@@ -27,10 +27,10 @@
     "ascii_printable_present": 95,
     "duplicate_hangul_outlines": 0,
     "hangul_bounds": [
-      45,
-      -160,
-      943,
-      752
+      35,
+      -132,
+      874,
+      815
     ],
     "raster_sizes_checked": [
       11,
@@ -40,7 +40,7 @@
       24,
       48
     ],
-    "sha256": "556c5cc4ddaae59fe31f9bc0147670bbb3bdf7160ef5c739f466b0bf9e52ff87",
+    "sha256": "77e7e270b455f8710e9fceaab465c6bca5e2e7bdd716c5da9530c744ed432778",
     "human_review": "representative images only; not all syllables or all applications"
   }
 ]

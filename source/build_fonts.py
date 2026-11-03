@@ -1,4 +1,4 @@
-"""방랑 UI / 방랑 기록체 0.1 — 외부 글꼴 윤곽을 읽지 않는 자체 글자 생성 원본.
+"""방랑 UI / 방랑 기록체 0.2 — 외부 글꼴 윤곽을 읽지 않는 자체 글자 생성 원본.
 
 한글 자모와 영문·숫자의 기본 선을 이 파일에서 직접 정의한다.
 원형·선·끝 장식으로 윤곽을 만들고, 초성/중성/종성 배치에 따라 완성형을 구성한다.
@@ -11,6 +11,7 @@ import hashlib
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.ttLib import TTFont
+from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 
 ROOT = Path(__file__).resolve().parents[1]
 LEADS = list('ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ')
@@ -24,7 +25,7 @@ MIXED = {'ㅘ':('ㅗ','ㅏ'),'ㅙ':('ㅗ','ㅐ'),'ㅚ':('ㅗ','ㅣ'),
 
 class Ink:
     def __init__(self, display=False):
-        self.pen=TTGlyphPen(None);self.display=display;self.weight=62 if display else 58
+        self.pen=TTGlyphPen(None);self.display=display;self.weight=86 if display else 76
     def polygon(self, points, hole=False):
         # 화면식 y좌표를 폰트의 기준선 좌표로 변환한다. 구멍은 반대 방향 윤곽이다.
         p=[(round(x),round(800-y)) for x,y in points]
@@ -41,21 +42,27 @@ class Ink:
         for (x,y),(a,b) in zip(points,points[1:]):
             d=math.hypot(a-x,b-y)
             if not d:continue
-            nx,ny=-(b-y)/d*r,(a-x)/d*r
+            # 기록체는 수평 획을 가늘게 하고 수직 획을 두껍게 쓴다.
+            radius=r*(.58+.42*abs(b-y)/d) if self.display else r
+            nx,ny=-(b-y)/d*radius,(a-x)/d*radius
             self.polygon([(x+nx,y+ny),(a+nx,b+ny),(a-nx,b-ny),(x-nx,y-ny)])
-        for x,y in points:self.disk(x,y,r if not self.display else r*.85)
+        if not self.display:
+            for x,y in points:self.disk(x,y,r)
         if self.display and len(points)>1:
-            # 기록체만 끝을 벌린 쐐기 장식을 붙인다. UI체에는 장식이 없다.
+            # 긴 세로·사선 끝에만 작은 받침을 넣는다. 모든 획의 끝을 가시처럼 키우지 않는다.
             for (x,y),(a,b) in [(points[0],points[1]),(points[-1],points[-2])]:
                 d=math.hypot(a-x,b-y)
-                if d:
-                    ux,uy=(a-x)/d,(b-y)/d;nx,ny=-uy,ux
-                    self.polygon([(x+nx*r*1.65,y+ny*r*1.65),(x-nx*r*1.65,y-ny*r*1.65),(x+ux*r*1.8,y+uy*r*1.8)])
+                if d>180 and abs(b-y)>d*.65:
+                    self.polygon([(x-r*1.40,y-10),(x+r*1.40,y-10),
+                                  (x+r*1.16,y+10),(x-r*1.16,y+10)])
     def oval(self,x,y,rx,ry,width=None):
         r=(width or self.weight)/2
-        count,phase=(8,math.pi/8) if self.display else (32,0)
-        for hole,dx in [(False,r),(True,-r)]:
-            self.polygon([(x+(rx+dx)*math.cos(phase+t*math.tau/count),y+(ry+dx)*math.sin(phase+t*math.tau/count)) for t in range(count)],hole)
+        # 얇은 가로 획과 두꺼운 세로 획을 가진 타원으로 기록체의 필획 대비를 만든다.
+        dy=r*.58 if self.display else r
+        assert rx>r and ry>dy, (rx,ry,r,dy)
+        for hole,sign in [(False,1),(True,-1)]:
+            self.polygon([(x+(rx+sign*r)*math.cos(t*math.tau/32),
+                           y+(ry+sign*dy)*math.sin(t*math.tau/32)) for t in range(32)],hole)
     def glyph(self):
         g=self.pen.glyph()
         if g.numberOfContours>0:g.flags[0]|=0x40 # 겹치는 선 윤곽임을 래스터라이저에 알린다.
@@ -63,14 +70,17 @@ class Ink:
 
 def jamo(ink,char,box):
     x,y,w,h=box
-    def line(*p):ink.line([(x+a*w,y+b*h) for a,b in p])
-    def oval(a,b,rx,ry):ink.oval(x+a*w,y+b*h,rx*w,ry*h)
+    # 압축된 초성·받침은 큰 자모의 획 굵기를 그대로 적용하지 않는다.
+    weight=ink.weight*(.88 if h<400 else 1.0)
+    if w<380:weight*=.96
+    def line(*p):ink.line([(x+a*w,y+b*h) for a,b in p],weight)
+    def oval(a,b,rx,ry):ink.oval(x+a*w,y+b*h,rx*w,ry*h,weight)
     if char in PAIRS:
         a,b=PAIRS[char];jamo(ink,a,(x,y,w*.45,h));jamo(ink,b,(x+w*.55,y,w*.45,h));return
     if char=='ㄱ':line((.12,.15),(.87,.15),(.87,.85))
     elif char=='ㄴ':line((.13,.15),(.13,.85),(.87,.85))
     elif char=='ㄷ':line((.87,.15),(.13,.15),(.13,.85),(.87,.85))
-    elif char=='ㄹ':line((.13,.15),(.87,.15),(.87,.5),(.13,.5),(.13,.85),(.87,.85))
+    elif char=='ㄹ':line((.13,.08),(.87,.08),(.87,.5),(.13,.5),(.13,.92),(.87,.92))
     elif char=='ㅁ':line((.13,.15),(.87,.15),(.87,.85),(.13,.85),(.13,.15))
     elif char=='ㅂ':
         line((.13,.15),(.13,.85),(.87,.85),(.87,.15));line((.13,.48),(.87,.48))
@@ -84,7 +94,12 @@ def jamo(ink,char,box):
     elif char=='ㅌ':line((.87,.15),(.13,.15),(.13,.85),(.87,.85));line((.13,.5),(.87,.5))
     elif char=='ㅍ':
         line((.1,.15),(.9,.15));line((.1,.85),(.9,.85));line((.3,.15),(.3,.85));line((.7,.15),(.7,.85))
-    elif char=='ㅎ':line((.35,.08),(.65,.08));line((.1,.28),(.9,.28));oval(.5,.65,.31,.23)
+    elif char=='ㅎ':
+        # 높이가 낮은 ㅎ은 윗획/가로획/원 사이를 확보한 전용 구조를 쓴다.
+        if h<400:
+            line((.36,0),(.64,0));line((.12,.33),(.88,.33));oval(.5,.82,.24,.18)
+        else:
+            line((.36,0),(.64,0));line((.12,.29),(.88,.29));oval(.5,.77,.31,.19)
     elif char in ('ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅣ'):
         if char=='ㅣ':line((.5,.08),(.5,.92));return
         right=char in 'ㅏㅐㅑㅒ';extra=char in 'ㅐㅒㅔㅖ';double=char in 'ㅑㅒㅕㅖ'
@@ -104,17 +119,18 @@ def jamo(ink,char,box):
 def syllable(ink,cp):
     n=cp-0xac00;l=LEADS[n//588];v=VOWELS[n//28%21];t=TAILS[n%28]
     # 받침이 있을 때 윗부분을 줄이되, 글자 전체의 폭과 기준선은 고정한다.
-    top=75;area=520 if t else 830
+    top=70;area=500 if t else 880
     if v in MIXED:
         a,b=MIXED[v]
-        jamo(ink,l,(90,top,470,area*.59))
-        jamo(ink,a,(65,top+area*.66,530,area*.32))
+        jamo(ink,l,(80,top,470,310 if t else 490))
+        jamo(ink,a,(60,465 if t else 675,525,130 if t else 230))
         jamo(ink,b,(650,top,275,area))
     elif v in 'ㅗㅛㅜㅠㅡ':
-        jamo(ink,l,(145,top,710,area*.57));jamo(ink,v,(75,top+area*.68,850,area*.3))
+        jamo(ink,l,(135,top,730,310 if t else 490))
+        jamo(ink,v,(60,465 if t else 675,880,130 if t else 230))
     else:
         jamo(ink,l,(70,top+area*.06,475,area*.9));jamo(ink,v,(610,top,320,area))
-    if t:jamo(ink,t,(115,650,770,300))
+    if t:jamo(ink,t,(95,630,810,340))
 
 # 영문 대문자는 기존 글꼴에서 추출하지 않고 선의 좌표를 직접 설계한다.
 CAPS={
@@ -180,10 +196,10 @@ def latin(ink,c):
     'e':[[(95,555),(510,555),(510,440),(405,320),(210,320),(90,445),(90,665),(210,800),(410,800),(510,730)]],
     'f':[[(185,800),(185,230),(285,110),(435,110)],[(75,350),(390,350)]],
     'h':[[(95,110),(95,800)],[(95,445),(225,320),(380,320),(505,445),(505,800)]],
-    'i':[[(205,335),(300,335),(300,800)],[(175,800),(425,800)]],
+    'i':[[(300,335),(300,800)]],
     'j':[[(240,335),(360,335),(360,875),(265,990),(140,990)]],
     'k':[[(95,110),(95,800)],[(500,320),(95,630),(515,800)]],
-    'l':[[(180,110),(300,110),(300,720),(385,800),(450,800)]],
+    'l':[[(240,110),(300,110),(300,720),(350,800),(405,800)]],
     'm':[[(65,800),(65,320)],[(65,415),(165,320),(240,320),(300,410),(300,800)],[(300,410),(400,320),(475,320),(550,410),(550,800)]],
     'n':[[(95,800),(95,320)],[(95,440),(220,320),(380,320),(505,440),(505,800)]],
     'r':[[(135,800),(135,320)],[(135,440),(265,320),(445,320)]],
@@ -214,10 +230,22 @@ def punctuation(ink,c):
         else:ink.line([(70,240),(150,120),(320,120),(405,240),(405,350),(225,480),(225,570)])
         ink.disk(200 if c=='!' else 225,760,ink.weight*.65);return 450
     if c in "'\"‘’“”`":
-        ink.line([(150,100),(115,280)])
-        if c in '\"“”':ink.line([(320,100),(285,280)])
+        # 여는 따옴표와 닫는 따옴표는 작은 머리와 꼬리의 방향이 서로 다르다.
+        for x in ([150,320] if c in '\"“”' else [150]):
+            if c in '‘“':
+                ink.line([(x+36,80),(x-20,170),(x-20,245)],ink.weight*.75)
+                ink.disk(x-20,245,ink.weight*.6)
+            elif c in '’”':
+                ink.disk(x,110,ink.weight*.6)
+                ink.line([(x,110),(x,180),(x-56,270)],ink.weight*.75)
+            elif c=='`':ink.line([(x-50,90),(x+40,240)],ink.weight*.75)
+            else:ink.line([(x,100),(x,260)],ink.weight*.75)
         return 430 if c in '\"“”' else 260
     if c in '-–—_=':
+        if c in '-–—':
+            advance={'-':420,'–':650,'—':1000}[c]
+            ink.line([(65,520),(advance-65,520)])
+            return advance
         ys=[440,610] if c=='=' else [840] if c=='_' else [520]
         for y in ys:ink.line([(80,y),(520,y)])
         return 620
@@ -227,6 +255,21 @@ def punctuation(ink,c):
         if c in '{}':p=[(340,70),(210,160),(210,350),(100,455),(210,560),(210,750),(340,840)]
         if c in ')]}':p=[(440-x,y) for x,y in p]
         ink.line(p);return 450
+    if c in '×÷±°℃✓•':
+        if c=='×':
+            ink.line([(115,250),(505,690)]);ink.line([(505,250),(115,690)])
+        elif c=='÷':
+            ink.line([(85,470),(535,470)]);ink.disk(310,230,ink.weight*.65);ink.disk(310,710,ink.weight*.65)
+        elif c=='±':
+            ink.line([(85,380),(535,380)]);ink.line([(310,160),(310,600)]);ink.line([(85,780),(535,780)])
+        elif c=='°':ink.oval(190,210,100,100);return 380
+        elif c=='℃':
+            ink.oval(150,210,80,80)
+            ink.line([(650,230),(560,150),(400,150),(300,280),(300,650),(400,780),(560,780),(650,700)])
+            return 730
+        elif c=='✓':ink.line([(75,500),(240,700),(545,180)])
+        else:ink.disk(220,470,100);return 440
+        return 620
     if c in '+<>|':
         if c=='+':ink.line([(80,470),(520,470)]);ink.line([(300,250),(300,690)])
         elif c=='|':ink.line([(180,100),(180,850)]);return 360
@@ -268,7 +311,7 @@ def build(display):
     family='Bangrang Chronicle' if display else 'Bangrang UI'
     korean='방랑 기록체' if display else '방랑 UI체'
     codes=set(range(32,127))|set(range(0xac00,0xd7a4))|set(map(ord,LEADS+VOWELS+TAILS[1:]))
-    codes |= set(map(ord,'·–—‘’“”…₩←↑→↓\u00a0\u3000\ufffd'))
+    codes |= set(map(ord,'·–—‘’“”…₩←↑→↓×÷±°℃✓•é\u00a0\u3000\ufffd'))
     codes |= set(range(0x1100,0x1113))|set(range(0x1161,0x1176))|set(range(0x11a8,0x11c3))
     glyphs={};metrics={};cmap={};order=['.notdef']
     ink=Ink(display);punctuation(ink,'\ufffd');glyphs['.notdef']=ink.glyph();metrics['.notdef']=(620,25)
@@ -279,8 +322,29 @@ def build(display):
         elif 0x1100<=cp<=0x1112:jamo(ink,LEADS[cp-0x1100],(90,100,820,780))
         elif 0x1161<=cp<=0x1175:jamo(ink,VOWELS[cp-0x1161],(90,100,820,780))
         elif 0x11a8<=cp<=0x11c2:jamo(ink,TAILS[cp-0x11a7],(90,100,820,780))
+        elif ch=='é':
+            latin(ink,'e');ink.line([(240,230),(390,100)],ink.weight*.72);advance=620
         else:advance=latin(ink,ch)
         name=f'uni{cp:04X}';g=ink.glyph();glyphs[name]=g
+        if 0xac00<=cp<=0xd7a3:
+            # 한영 혼용에서 한글만 아래로 처져 보이지 않도록 시각 중심을 맞춘다.
+            g.coordinates.translate((0,60))
+        if g.numberOfContours and (ch.isascii() and ch.isalpha() or ch=='é'):
+            # 영문은 윤곽에 맞춰 자폭을 정하고, m/W는 두 줄기 이상의 내부 공간도 넓힌다.
+            scale={'m':1.32,'w':1.20,'M':1.20,'W':1.24}.get(ch,1.0)
+            g.coordinates.scale((scale,1));g.recalcBounds(glyphs)
+            side=52 if not display else 64
+            g.coordinates.translate((side-g.xMin,0));g.recalcBounds(glyphs)
+            advance=g.xMax+side
+        if display and g.numberOfContours:
+            # 기록체는 전체 비례도 좁혀 UI체와 별개의 제목용 리듬을 만든다.
+            g.coordinates.scale((.92,1));advance=round(advance*.92)
+        if g.numberOfContours:
+            g.recalcBounds(glyphs)
+            # 통화 기호 등의 돌출 장식도 글자 칸 안에 들어오게 한다.
+            if g.xMin<0:
+                g.coordinates.translate((10-g.xMin,0));g.recalcBounds(glyphs)
+            advance=max(advance,g.xMax+10)
         # hmtx 왼쪽 여백은 실제 윤곽의 최소 x와 일치시켜 줄 시작 위치를 보존한다.
         if g.numberOfContours:g.recalcBounds(glyphs);left=g.xMin
         else:left=0
@@ -288,14 +352,24 @@ def build(display):
     fb=FontBuilder(1000,isTTF=True);fb.setupGlyphOrder(order);fb.setupCharacterMap(cmap)
     fb.setupGlyf(glyphs);fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=900,descent=-250,lineGap=50)
-    fb.setupNameTable({'familyName':family,'styleName':'Regular','uniqueFontIdentifier':family+' 0.1.0',
-        'fullName':family+' Regular','psName':family.replace(' ','')+'-Regular','version':'Version 0.100',
+    fb.setupNameTable({'familyName':family,'styleName':'Regular','uniqueFontIdentifier':family+' 0.2.0',
+        'fullName':family+' Regular','psName':family.replace(' ','')+'-Regular','version':'Version 0.200',
         'copyright':'Copyright 2026 The Bangrang Font Project Authors.',
         'licenseDescription':'Licensed under the SIL Open Font License, Version 1.1. No Reserved Font Names.',
         'licenseInfoURL':'https://openfontlicense.org'})
     fb.setupOS2(version=4,sTypoAscender=900,sTypoDescender=-250,sTypoLineGap=50,usWinAscent=900,usWinDescent=250,
                 usWeightClass=400,fsType=0,fsSelection=0xc0,sxHeight=480,sCapHeight=690)
     fb.setupPost();fb.setupMaxp()
+    fb.font['head'].fontRevision=.2
+    fb.font['head'].lowestRecPPEM=18 if display else 13
+    fb.font['name'].setName(family+' 0.2.0',3,3,1,0x409)
+    fb.font['name'].setName(family,16,3,1,0x409)
+    fb.font['name'].setName('Regular',17,3,1,0x409)
+    # 일반 프로그램에서 영문 글자쌍 간격을 보정한다. 게임의 아틀라스는 별도 폭을 사용한다.
+    pairs={'AV':-45,'AW':-35,'AT':-25,'AY':-40,'VA':-45,'WA':-35,'TA':-25,'YA':-40,
+           'To':-35,'Ta':-35,'Te':-35,'Yo':-35,'Ya':-35,'Wo':-20,'Vo':-25,'LT':-20}
+    rules='\n'.join(f'pos uni{ord(a):04X} uni{ord(b):04X} {value};' for (a,b),value in pairs.items())
+    addOpenTypeFeaturesFromString(fb.font,'languagesystem DFLT dflt; languagesystem latn dflt; feature kern {\n'+rules+'\n} kern;')
     fb.font['name'].setName(korean,1,3,1,0x412);fb.font['name'].setName(korean+' Regular',4,3,1,0x412)
     out=ROOT/'fonts';out.mkdir(parents=True,exist_ok=True);path=out/(family.replace(' ','')+'-Regular.ttf');fb.save(path)
     font=TTFont(path);cmap2=font.getBestCmap()
@@ -309,9 +383,9 @@ def build(display):
     return {'family':family,'korean_name':korean,'file':path.name,'glyph_count':len(order),
             'hangul_syllables':11172,'ascii_printable':95,'unicode_codepoints':len(cmap2),
             'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
-            'status':'0.1 prototype; full human readability review pending','bounds_check':'passed'}
+            'status':'0.2 revised; see validation and usage size limits','bounds_check':'passed'}
 
 if __name__=='__main__':
     results=[build(False),build(True)]
-    (ROOT/'build-report.json').write_text(json.dumps(results,ensure_ascii=False,indent=2),encoding='utf-8')
+    (ROOT/'build-report.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(results,ensure_ascii=True,indent=2))
