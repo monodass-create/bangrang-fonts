@@ -1,0 +1,26 @@
+[
+  {
+    "family": "Bangrang UI",
+    "korean_name": "방랑 UI체",
+    "file": "BangrangUI-Regular.ttf",
+    "glyph_count": 11402,
+    "hangul_syllables": 11172,
+    "ascii_printable": 95,
+    "unicode_codepoints": 11401,
+    "sha256": "38b63595bc10da6faca48037a6aa17d00baa4476f0adc0e120d65f52d9c8e665",
+    "status": "0.1 prototype; full human readability review pending",
+    "bounds_check": "passed"
+  },
+  {
+    "family": "Bangrang Chronicle",
+    "korean_name": "방랑 기록체",
+    "file": "BangrangChronicle-Regular.ttf",
+    "glyph_count": 11402,
+    "hangul_syllables": 11172,
+    "ascii_printable": 95,
+    "unicode_codepoints": 11401,
+    "sha256": "556c5cc4ddaae59fe31f9bc0147670bbb3bdf7160ef5c739f466b0bf9e52ff87",
+    "status": "0.1 prototype; full human readability review pending",
+    "bounds_check": "passed"
+  }
+]
