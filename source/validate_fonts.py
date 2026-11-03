@@ -30,7 +30,7 @@ for path in sorted((ROOT/'fonts').glob('*.ttf')):
             assert g.xMin>=0 and g.xMax<=metrics[name][0],name
             assert g.yMax<=f['OS/2'].usWinAscent and g.yMin>=-f['OS/2'].usWinDescent,(name,g.yMin,g.yMax)
             bounds.append([g.xMin,g.yMin,g.xMax,g.yMax])
-    assert 'GPOS' in f and abs(f['head'].fontRevision-.4)<.00001 and f['name'].getDebugName(5)=='Version 0.400'
+    assert 'GPOS' in f and abs(f['head'].fontRevision-.5)<.00001 and f['name'].getDebugName(5)=='Version 0.500'
     raw=path.read_bytes();pad=raw+b'\0'*((-len(raw))%4)
     assert sum(struct.unpack('>'+str(len(pad)//4)+'I',pad))&0xffffffff==0xb1b0afba
     topology=[]

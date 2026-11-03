@@ -1,0 +1,54 @@
+[
+  {
+    "font": "BangrangUI-Regular.ttf",
+    "sha256": "58396703967216a2fb06c045e2686dd2c570463462179ff404e1bc3152f40662",
+    "hangul_outlines_and_advances_unchanged_from_04": 11172,
+    "added_codepoints": [
+      "0x203b",
+      "0x3008",
+      "0x3009",
+      "0x300a",
+      "0x300b",
+      "0x300c",
+      "0x300d",
+      "0x300e",
+      "0x300f"
+    ],
+    "new_punctuation_raster_sizes": [
+      12,
+      14,
+      16,
+      18,
+      24,
+      48
+    ],
+    "corner_quote_open_close_orientation": "passed",
+    "space_advance": 380
+  },
+  {
+    "font": "BangrangChronicle-Regular.ttf",
+    "sha256": "1bb4a7ca58b96064cdc333a0af4137e7f02884a2dc61a960c678daa77cb61f06",
+    "hangul_outlines_and_advances_unchanged_from_04": 11172,
+    "added_codepoints": [
+      "0x203b",
+      "0x3008",
+      "0x3009",
+      "0x300a",
+      "0x300b",
+      "0x300c",
+      "0x300d",
+      "0x300e",
+      "0x300f"
+    ],
+    "new_punctuation_raster_sizes": [
+      12,
+      14,
+      16,
+      18,
+      24,
+      48
+    ],
+    "corner_quote_open_close_orientation": "passed",
+    "space_advance": 330
+  }
+]

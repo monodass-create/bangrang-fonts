@@ -1,0 +1,60 @@
+{
+  "pages": 7,
+  "narrative_characters_including_spaces": 5358,
+  "expected_text_blocks": 81,
+  "text_blocks_preserved": true,
+  "missing_supported_text_characters": [],
+  "body_size_pt": 11.5,
+  "leading_pt": 18,
+  "body_width_pt": 455.28,
+  "body_bounds_failures": [],
+  "embedded_fonts_per_page": [
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ],
+    [
+      "/AAAAAA+BangrangChronicle-Regular",
+      "/AAAAAA+BangrangUI-Regular",
+      "/AAAAAB+BangrangUI-Regular",
+      "/AAAAAC+BangrangUI-Regular"
+    ]
+  ],
+  "source_scope": "Explicitly fictional typography sample, not a participant report or a reconstruction of Parfum",
+  "font_sha256": {
+    "BangrangChronicle-Regular.ttf": "1bb4a7ca58b96064cdc333a0af4137e7f02884a2dc61a960c678daa77cb61f06",
+    "BangrangUI-Regular.ttf": "58396703967216a2fb06c045e2686dd2c570463462179ff404e1bc3152f40662"
+  }
+}

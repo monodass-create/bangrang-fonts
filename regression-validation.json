@@ -1,7 +1,7 @@
 [
   {
     "font": "BangrangChronicle-Regular.ttf",
-    "sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
+    "sha256": "1bb4a7ca58b96064cdc333a0af4137e7f02884a2dc61a960c678daa77cb61f06",
     "hangul_nonempty_distinct": 11172,
     "structure_bounds_metadata_checksum": "passed",
     "topology_tested": 0,
@@ -10,7 +10,7 @@
   },
   {
     "font": "BangrangUI-Regular.ttf",
-    "sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
+    "sha256": "58396703967216a2fb06c045e2686dd2c570463462179ff404e1bc3152f40662",
     "hangul_nonempty_distinct": 11172,
     "structure_bounds_metadata_checksum": "passed",
     "topology_tested": 11172,

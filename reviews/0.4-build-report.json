@@ -1,0 +1,16 @@
+[
+  {
+    "file": "BangrangChronicle-Regular.ttf",
+    "sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
+    "glyph_count": 11410,
+    "codepoints": 11409,
+    "version": "Version 0.400"
+  },
+  {
+    "file": "BangrangUI-Regular.ttf",
+    "sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
+    "glyph_count": 11410,
+    "codepoints": 11409,
+    "version": "Version 0.400"
+  }
+]

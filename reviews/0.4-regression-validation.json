@@ -1,0 +1,20 @@
+[
+  {
+    "font": "BangrangChronicle-Regular.ttf",
+    "sha256": "66ced67d6daa0510aac65cf2eca4ff19b24c76d6d3c819b0a7e1ccc55aa8b8e2",
+    "hangul_nonempty_distinct": 11172,
+    "structure_bounds_metadata_checksum": "passed",
+    "topology_tested": 0,
+    "topology_mismatches": [],
+    "limits": "Structural validation; not human readability certification"
+  },
+  {
+    "font": "BangrangUI-Regular.ttf",
+    "sha256": "3c9443b1a8fff4a582889176c618058ad07fc87f8600efe7b0b25aca2696245f",
+    "hangul_nonempty_distinct": 11172,
+    "structure_bounds_metadata_checksum": "passed",
+    "topology_tested": 11172,
+    "topology_mismatches": [],
+    "limits": "Structural validation; not human readability certification"
+  }
+]

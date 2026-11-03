@@ -1,0 +1,23 @@
+{
+  "scope": "Process-private GDI font loading and mapping; not persistent installation, restart, Word, or DPI certification",
+  "results": [
+    {
+      "file": "BangrangUI-Regular.ttf",
+      "private_process_registration": 1,
+      "selected_face": "방랑 UI체",
+      "selected_revision": 0.5,
+      "hangul_glyphs_found": 11172,
+      "source_sha256": "58396703967216a2fb06c045e2686dd2c570463462179ff404e1bc3152f40662",
+      "resource_removed": true
+    },
+    {
+      "file": "BangrangChronicle-Regular.ttf",
+      "private_process_registration": 1,
+      "selected_face": "방랑 기록체",
+      "selected_revision": 0.5,
+      "hangul_glyphs_found": 11172,
+      "source_sha256": "1bb4a7ca58b96064cdc333a0af4137e7f02884a2dc61a960c678daa77cb61f06",
+      "resource_removed": true
+    }
+  ]
+}
